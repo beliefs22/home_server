@@ -5,8 +5,13 @@ from .models import Video
 def index(request):
     return render(request, 'video_streamer/index.html', context={})
 
-def view_single_video(request, video_title):
-    video = get_object_or_404(Video, pk=video_title)
+def view_single_video(request, vid):
+    video = get_object_or_404(Video, pk=vid)
     context = {'video' : video }
     return render(request, 'video_streamer/player.html', context=context)
 
+
+def video_index(request):
+    all_videos = Video.objects.all()
+    context = {'all_videos' : all_videos}
+    return render(request, 'video_streamer/video_index.html', context=context)

@@ -4,7 +4,8 @@ from django.db import models
 
 
 class Video(models.Model):
-    video_title = models.CharField(max_length=200, primary_key=True)
+    vid = models.CharField(max_length=200, primary_key=True)
+    video_title = models.CharField(max_length=200)
     OGG = 0
     WEBM = 1
     MP4 = 2
@@ -34,4 +35,10 @@ class Video(models.Model):
             3 :'video/flv',
         }
         return video_types[self.video_type]
+
+    def __repr__(self):
+        return self.video_title
+
+    def __str__(self):
+        return self.video_title
 

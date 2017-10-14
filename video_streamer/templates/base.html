@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+	<link rel="stylesheet" type="text/css" href="{% static 'video_streamer/style.css' %}" />
 	<title>Video Streamer</title>
 </head>
 
@@ -12,6 +12,7 @@
 		<nav>
 			<ul>
 				<li><a href="{% url 'video_streamer:index' %}">Main Page</a></li>
+				<li><a href="{% url 'video_streamer:video_index'%}">View Available Videos</a></li>
 			</ul>
 		</nav>
 		{% endblock %}

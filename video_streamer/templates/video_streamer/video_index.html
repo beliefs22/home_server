@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <article>
+        {% if all_videos %}
+        <table>
+
+        {% for video in all_videos %}
+            <tr>
+                <td><a href="{% url 'video_streamer:view_single_video' vid=video.vid %}">{{video.video_title}}</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+    </article>
+{% endblock %}
