@@ -27,15 +27,21 @@ def main():
             if dir_to_save:
                 for m in matches:
                     print(m)
-                    convert_video_to_mp4("{}.{}".format(m, file_type), file_type, folder, dir_to_save=dir_to_save)
+                    video_name = os.path.basename(m)
+                    input_folder = os.path.dirname(m)
+                    convert_video_to_mp4(video_name, file_type, input_folder, dir_to_save=dir_to_save)
             else:
                 print("Sorry we can't search there")
         else:
             for m in matches:
                 print(m)
-                convert_video_to_mp4("{}.{}".format(m, file_type), file_type, folder)
+                video_name = os.path.basename(m)
+                input_folder = os.path.dirname(m)
+                convert_video_to_mp4(video_name, file_type, input_folder)
     else:
-        print("You did not provide the correct arguments inpupt_dir file_type [out_directory]")
+        for arg in sys.argv:
+            print(arg)
+        print("You did not provide the correct arguments: 1. inpupt_dir 2. file_type [3. out_directory]")
         return
 
 
@@ -77,11 +83,6 @@ def search_folders(folder, file_type):
             yield from search_folders(full_item, file_type)
         else:
             yield from search_file(full_item, file_type)
-            # all_matches.extend(matches)
-            # for m in matches:
-            #     yield m
-
-            # return all_matches
 
 
 def search_file(filename, file_type):
@@ -93,19 +94,22 @@ def search_file(filename, file_type):
     """
     # matches = []
     if filename.endswith(file_type):
-        yield filename[: len(filename) - len(file_type) - 1]
+        yield filename
 
 
-def convert_video_to_mp4(video, file_type_to_convert, input_folder, dir_to_save=None):
-    print("video is", video)
+def convert_video_to_mp4(old_video, file_type_to_convert, input_folder, dir_to_save=None):
+    old_video_path = os.path.join(input_folder, old_video)
     if dir_to_save:
-        print("inside conver, we got a directory", dir_to_save)
-        new_video = dir_to_save + os.sep + video.replace(file_type_to_convert, "mp4").replace(input_folder, "")
-        print(new_video, "insde of dir to save opt")
+        new_video_path = os.path.join(dir_to_save, old_video.replace(file_type_to_convert, "mp4"))
     else:  # save in current directory
-        new_video = video.replace(file_type_to_convert, "mp4")
-    print("New video will be saved to {}".format(new_video))
-    subprocess.run(['ffmpeg', '-i', video, "-strict", "-2", new_video], stdout=subprocess.PIPE)
+        new_video_path = old_video_path.replace(file_type_to_convert, "mp4")
+    print("converting {}".format(old_video))
+    if not os.path.isfile(old_video_path):
+        print("{} is not a file".format(old_video_path))
+        return
+    subprocess.run([r'C:\Users\beliefs22\AppData\Local\Programs\ffmpeg\bin\ffmpeg.exe', '-i',
+                    old_video_path, "-strict", "-2", new_video_path], stderr=subprocess.PIPE)
+    print("Finished converting {} saved at {}".format(old_video, new_video_path))
 
 
 def find_and_convert_media_files(input_folder, file_type, output_folder=None):
@@ -138,14 +142,17 @@ def find_and_convert_media_files(input_folder, file_type, output_folder=None):
         dir_to_save = get_folder_from_user(dir_to_save)
         if dir_to_save:
             for m in matches:
-                print(m)
-                convert_video_to_mp4("{}.{}".format(m, file_type), file_type, folder, dir_to_save=dir_to_save)
+                video_name = os.path.basename(m)
+                input_folder = os.path.dirname(m)  # Find specific input folder since it searchers recursively
+                convert_video_to_mp4(video_name, file_type, input_folder, dir_to_save=dir_to_save)
         else:
             print("Sorry we can't search there")
     else:
         for m in matches:
             print(m)
-            convert_video_to_mp4("{}.{}".format(m, file_type), file_type, folder)
+            video_name = os.path.basename(m)
+            input_folder = os.path.dirname(m)
+            convert_video_to_mp4(video_name, file_type, input_folder)
 
 
 if __name__ == '__main__':
