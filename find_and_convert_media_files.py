@@ -4,32 +4,42 @@ import subprocess
 
 
 def main():
-    if len(sys.argv) == 4:
-        print_header()
-        folder = sys.argv[1]
-        folder = get_folder_from_user(folder)
-        if not folder:
-            print(folder)
-            print("Sorry we can't search that location.")
-            return
+    if len(sys.argv) in (3, 4):
+        if len(sys.argv) == 3:
+            print_header()
+            folder = sys.argv[1]
+            folder = get_folder_from_user(folder)
+            dir_to_save = None
+            if not folder:
+                print(folder)
+                print("Sorry we can't search that location.")
+                return
+        elif len(sys.argv) == 4:
+            print_header()
+            folder = get_folder_from_user(sys.argv[1])
+            dir_to_save = get_folder_from_user(sys.argv[3])
+            if not folder:
+                print(folder)
+                print("Sorry we can't search that location.")
+                return
+            if not dir_to_save:
+                print("Sorry we can't save files there")
+                return
         file_type = sys.argv[2]
 
         if not file_type.strip():
-            print("We can't search for nothing!")
+            print("You did not provide a file type!")
             return
 
         print("Searching {} for {} type files".format(folder, file_type))
 
         matches = search_folders(folder, file_type)
-        if len(sys.argv) == 4:
-            dir_to_save = sys.argv[3]
-            dir_to_save = get_folder_from_user(dir_to_save)
-            if dir_to_save:
-                for m in matches:
-                    print(m)
-                    video_name = os.path.basename(m)
-                    input_folder = os.path.dirname(m)
-                    convert_video_to_mp4(video_name, file_type, input_folder, dir_to_save=dir_to_save)
+        if dir_to_save:
+            for m in matches:
+                print(m)
+                video_name = os.path.basename(m)
+                input_folder = os.path.dirname(m)
+                convert_video_to_mp4(video_name, file_type, input_folder, dir_to_save=dir_to_save)
             else:
                 print("Sorry we can't search there")
         else:
@@ -41,7 +51,7 @@ def main():
     else:
         for arg in sys.argv:
             print(arg)
-        print("You did not provide the correct arguments: 1. inpupt_dir 2. file_type [3. out_directory]")
+        print("You did not provide the correct arguments: (input_directory\n file_type_extention\n [output_dir]\n")
         return
 
 
@@ -107,7 +117,7 @@ def convert_video_to_mp4(old_video, file_type_to_convert, input_folder, dir_to_s
     if not os.path.isfile(old_video_path):
         print("{} is not a file".format(old_video_path))
         return
-    subprocess.run([r'C:\Users\beliefs22\AppData\Local\Programs\ffmpeg\bin\ffmpeg.exe', '-i',
+    subprocess.run(['ffmpeg', '-i',
                     old_video_path, "-strict", "-2", new_video_path], stderr=subprocess.PIPE)
     print("Finished converting {} saved at {}".format(old_video, new_video_path))
 
