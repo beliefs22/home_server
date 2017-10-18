@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+import time
 
 
 def main():
@@ -39,7 +40,10 @@ def main():
                 print(m)
                 video_name = os.path.basename(m)
                 input_folder = os.path.dirname(m)
+                start = time.time()
                 convert_video_to_mp4(video_name, file_type, input_folder, dir_to_save=dir_to_save)
+                end = time.time()
+                print("Converted in {} minutes".format((end - start) / 60))
             else:
                 print("Sorry we can't search there")
         else:
@@ -47,7 +51,10 @@ def main():
                 print(m)
                 video_name = os.path.basename(m)
                 input_folder = os.path.dirname(m)
+                start = time.time()
                 convert_video_to_mp4(video_name, file_type, input_folder)
+                end = time.time()
+                print("Converted in {} minutes".format((end - start) / 60))
     else:
         for arg in sys.argv:
             print(arg)
@@ -154,7 +161,10 @@ def find_and_convert_media_files(input_folder, file_type, output_folder=None):
             for m in matches:
                 video_name = os.path.basename(m)
                 input_folder = os.path.dirname(m)  # Find specific input folder since it searchers recursively
+                start = time.time()
                 convert_video_to_mp4(video_name, file_type, input_folder, dir_to_save=dir_to_save)
+                end = time.time()
+                print("Converted in {} minutes".format((end - start) / 60))
         else:
             print("Sorry we can't search there")
     else:
@@ -162,7 +172,10 @@ def find_and_convert_media_files(input_folder, file_type, output_folder=None):
             print(m)
             video_name = os.path.basename(m)
             input_folder = os.path.dirname(m)
+            start = time.time()
             convert_video_to_mp4(video_name, file_type, input_folder)
+            end = time.time()
+            print("Converted in {} minutes".format((end - start) / 60))
 
 
 if __name__ == '__main__':
