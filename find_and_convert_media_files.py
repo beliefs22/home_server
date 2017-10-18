@@ -125,7 +125,8 @@ def convert_video_to_mp4(old_video, file_type_to_convert, input_folder, dir_to_s
         print("{} is not a file".format(old_video_path))
         return
     subprocess.run(['ffmpeg', '-i',
-                    old_video_path, "-strict", "-2", new_video_path], stderr=subprocess.PIPE)
+                    old_video_path, "-strict", "-2", "-threads", "3", new_video_path], stdin=subprocess.PIPE,
+                   stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     print("Finished converting {} saved at {}".format(old_video, new_video_path))
 
 
